@@ -2,6 +2,9 @@ target_sources(${PROJECT_NAME}
 	PRIVATE 
 		main.cpp 
 		rtos.c
+		WS2812B.h
+		Delay.h
+		Color.h
 )
 
 add_subdirectory(Cube)
