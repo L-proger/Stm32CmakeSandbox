@@ -4,7 +4,20 @@
 	"cortex-debug.openocdPath": "C:\\openocd-v0.12.0-i686-w64-mingw32\\bin\\openocd.exe",
     "cmake.generator": "Ninja",
     "files.associations": {
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "cmath": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "cstdarg": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "type_traits": "cpp",
+        "limits": "cpp",
+        "new": "cpp",
+        "*.tcc": "cpp",
+        "typeinfo": "cpp"
     },
     //"cmake.cmakePath": "C:\\PROGRAM FILES\\MICROSOFT VISUAL STUDIO\\2022\\PREVIEW\\COMMON7\\IDE\\COMMONEXTENSIONS\\MICROSOFT\\CMAKE\\CMake\\bin\\cmake.exe",
 }

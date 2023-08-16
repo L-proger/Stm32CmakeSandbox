@@ -60,8 +60,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define JOY_DOWN_Y_Pin GPIO_PIN_15
 #define JOY_DOWN_Y_GPIO_Port GPIOB
-#define JOY_UP_Z_Pin GPIO_PIN_8
-#define JOY_UP_Z_GPIO_Port GPIOD
 #define JOY_RIGHT_MODE_Pin GPIO_PIN_9
 #define JOY_RIGHT_MODE_GPIO_Port GPIOD
 #define JOY_LEFT_X_Pin GPIO_PIN_10
@@ -70,8 +68,6 @@ void Error_Handler(void);
 #define JOY_C_START_GPIO_Port GPIOD
 #define JOY_B_A_Pin GPIO_PIN_12
 #define JOY_B_A_GPIO_Port GPIOD
-#define JOY_SELECT_Pin GPIO_PIN_14
-#define JOY_SELECT_GPIO_Port GPIOD
 #define LED_Pin GPIO_PIN_0
 #define LED_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */

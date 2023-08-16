@@ -59,6 +59,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_tim5_ch1;
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 /* USER CODE BEGIN EV */
 
@@ -181,6 +182,28 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f7xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles DMA1 stream2 global interrupt.
+  */
+void DMA1_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
+  
+extern TIM_HandleTypeDef htim5;
+  extern int dmaTransferCount;
+ 
+
+   if(__HAL_DMA_GET_IT_SOURCE(&hdma_tim5_ch1, DMA_IT_TC) != RESET){
+    
+   }
+ 
+  /* USER CODE END DMA1_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_tim5_ch1);
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
+  
+  /* USER CODE END DMA1_Stream2_IRQn 1 */
+}
 
 /**
   * @brief This function handles USB On The Go FS global interrupt.
