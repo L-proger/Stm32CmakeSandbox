@@ -4,8 +4,8 @@
 #include <main.h>
 
 #include <cstring>
-#include <usart.h>
-#include <tim.h>
+//#include <usart.h>
+//#include <tim.h>
 #include <type_traits>
 #include <cstdint>
 #include <cmath>
