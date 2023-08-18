@@ -22,6 +22,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "stm32f7xx_hal.h"
+#include <stm32f7xx_ll_dma.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include <LFramework/MCU/stm32/HardFaultHandler.h>
@@ -161,7 +162,7 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
+ // HAL_IncTick();
 #if (INCLUDE_xTaskGetSchedulerState == 1 )
   if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
   {
@@ -187,18 +188,18 @@ void SysTick_Handler(void)
   */
 void DMA1_Stream2_IRQHandler(void)
 {
-  /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
-  
-extern TIM_HandleTypeDef htim5;
-  extern int dmaTransferCount;
- 
 
-   if(__HAL_DMA_GET_IT_SOURCE(&hdma_tim5_ch1, DMA_IT_TC) != RESET){
-    
-   }
+  extern void pwmDmaDone();
+  if (LL_DMA_IsEnabledIT_HT(DMA1, LL_DMA_STREAM_2) && LL_DMA_IsActiveFlag_HT2(DMA1)) {
+    LL_DMA_ClearFlag_HT2(DMA1);
+  }
+  if (LL_DMA_IsEnabledIT_TC(DMA1, LL_DMA_STREAM_2) && LL_DMA_IsActiveFlag_TC2(DMA1)) {
+    LL_DMA_ClearFlag_TC2(DMA1);
+    pwmDmaDone();
+  }
  
   /* USER CODE END DMA1_Stream2_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_tim5_ch1);
+  //HAL_DMA_IRQHandler(&hdma_tim5_ch1);
   /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
   
   /* USER CODE END DMA1_Stream2_IRQn 1 */

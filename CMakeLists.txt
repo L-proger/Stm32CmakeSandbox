@@ -48,5 +48,6 @@ PRIVATE
 target_compile_definitions(${PROJECT_NAME} 
 PRIVATE 
     ${STM32_DEVICE}
+    USE_FULL_LL_DRIVER
 )
 

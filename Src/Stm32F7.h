@@ -1,6 +1,7 @@
 
 
 #include <stm32f7xx.h>
+#include <cstdint>
 
 #ifdef STM32F746xx
 
@@ -18,17 +19,16 @@ inline std::uint32_t calcFlashLatency(float voltage, std::uint32_t hclk) {
 }
 
 
-inline uint32_t getHclk(RCC_OscInitTypeDef* oscInit, RCC_ClkInitTypeDef* clkInit) {
-    if(clkInit->SYSCLKSource == RCC_SYSCLKSOURCE_PLLCLK){
-        auto pllInputValue = oscInit->PLL.PLLSource == RCC_PLLSOURCE_HSE ? HSE_VALUE : HSI_VALUE;
+inline uint32_t getHclk(std::uint32_t sysclkSource, std::uint32_t pllSource, std::uint32_t ahbDivider, std::uint32_t pllM, std::uint32_t pllN, std::uint32_t pllP ) {
+    if(sysclkSource == LL_RCC_SYS_CLKSOURCE_PLL){
+        auto pllInputValue = pllSource == LL_RCC_PLLSOURCE_HSE ? HSE_VALUE : HSI_VALUE;
+        auto ahbPrescalerValue = ahbDivider == LL_RCC_SYSCLK_DIV_1 ? 1 :  (2 << ((ahbDivider - LL_RCC_SYSCLK_DIV_2) / 16));
 
-        auto ahbPrescalerValue = clkInit->AHBCLKDivider == RCC_CFGR_HPRE_DIV1 ? 1 :  (2 << ((clkInit->AHBCLKDivider - RCC_CFGR_HPRE_DIV2) / 16));
-
-        return (pllInputValue / oscInit->PLL.PLLM * oscInit->PLL.PLLN / oscInit->PLL.PLLP) / ahbPrescalerValue;
-
-    }else if(clkInit->SYSCLKSource == RCC_SYSCLKSOURCE_HSE){
+        pllP = 2 + 2 * (pllP >> 16);
+        return (pllInputValue / pllM * pllN / pllP) / ahbPrescalerValue;
+    }else if(sysclkSource == LL_RCC_SYS_CLKSOURCE_HSE){
         return HSE_VALUE;
-    }else if(clkInit->SYSCLKSource == RCC_SYSCLKSOURCE_HSI){
+    }else if(sysclkSource == LL_RCC_SYS_CLKSOURCE_HSI){
         return HSI_VALUE;
     }else{
         return 0;
