@@ -6,6 +6,9 @@ target_sources(${PROJECT_NAME}
 		Color.h
 		interrupts.c
 		Stm32F7.h
+		Syscalls.cpp
+		Rtos.cpp
+		PinMap.h
 )
 
 #add_subdirectory(Cube)

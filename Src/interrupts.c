@@ -19,10 +19,9 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-
 #include "FreeRTOS.h"
 #include "task.h"
+#include "stm32f7xx_hal.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 //#include <LFramework/MCU/stm32/HardFaultHandler.h>
