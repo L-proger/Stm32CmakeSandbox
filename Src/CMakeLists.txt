@@ -4,6 +4,8 @@ target_sources(${PROJECT_NAME}
 		WS2812B.h
 		Delay.h
 		Color.h
+		interrupts.c
+		Stm32F7.h
 )
 
 #add_subdirectory(Cube)
