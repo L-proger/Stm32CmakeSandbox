@@ -13,16 +13,24 @@ set(CMAKE_C_STANDARD 11)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/LFramework.CMake/stm32)
 
-include(fetch)
-FetchStm32F7Hal()
-FetchStm32F7FreeRtos()
-FetchStm32F7CmsisDevice()
-FetchStm32F7CmsisCore()
+set(STM32_DEVICE STM32F746VGT6)
 
-find_package(Stm32F7Hal REQUIRED)
-find_package(Stm32F7FreeRtos REQUIRED)
-find_package(Stm32F7CmsisDevice REQUIRED)
-find_package(Stm32F7CmsisCore REQUIRED)
+
+include(fetch)
+FetchStm32Hal()
+FetchStm32FreeRtos()
+FetchStm32CmsisDevice()
+FetchStm32CmsisCore()
+
+find_package(Stm32Hal REQUIRED)
+find_package(Stm32FreeRtos REQUIRED)
+find_package(Stm32CmsisDevice REQUIRED)
+find_package(Stm32CmsisCore REQUIRED)
+
+
+
+
+
 
 
 add_executable(${PROJECT_NAME})
@@ -31,10 +39,10 @@ add_subdirectory(Src)
 
 target_link_libraries(${PROJECT_NAME} 
 PRIVATE 
-    Stm32F7Hal
-    Stm32F7FreeRtos
-    Stm32F7CmsisDevice
-    Stm32F7CmsisCore
+    Stm32Hal
+    Stm32FreeRtos
+    Stm32CmsisDevice
+    Stm32CmsisCore
 )
 
 target_compile_definitions(${PROJECT_NAME} 
