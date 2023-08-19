@@ -16,6 +16,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/LFramewor
 set(STM32_DEVICE STM32F746VGT6)
 
 
+
 include(fetch)
 FetchStm32Hal()
 FetchStm32FreeRtos()
@@ -30,7 +31,7 @@ find_package(Stm32CmsisCore REQUIRED)
 find_package(Stm32UsbDevice REQUIRED)
 
 
-
+add_subdirectory(Dependencies/LFramework)
 
 
 
@@ -45,6 +46,10 @@ PRIVATE
     Stm32CmsisDevice
     Stm32CmsisCore
     Stm32UsbDevice
+    LFramework
+    LFramework::Usb
+    LFramework::Usb::Device
+    LFramework::UnitTest
 )
 
 target_compile_options(${PROJECT_NAME} 
@@ -57,5 +62,6 @@ PRIVATE
     ${STM32_DEVICE}
     USE_FULL_LL_DRIVER
     HSE_VALUE=12000000
+    LF_TARGET_OS=LF_OS_FREERTOS
 )
 

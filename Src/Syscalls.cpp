@@ -72,11 +72,11 @@ extern "C" {
         return -1;
     }
 
-    void _exit (int status)
-    {
-        _kill(status, -1);
-        while (1) {}		
-    }
+   //void _exit (int status)
+   //{
+   //    _kill(status, -1);
+   //    while (1) {}		
+   //}
 
     void* _realloc_r(struct _reent *re, void* oldAddr, size_t newSize) {
         static_cast<void>(re);

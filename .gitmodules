@@ -1,3 +1,6 @@
 [submodule "Dependencies/LFramework.CMake"]
 	path = Dependencies/LFramework.CMake
 	url = https://github.com/L-proger/LFramework.CMake.git
+[submodule "Dependencies/LFramework"]
+	path = Dependencies/LFramework
+	url = https://github.com/L-proger/LFramework.git
