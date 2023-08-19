@@ -10,6 +10,9 @@
 #include <stm32f7xx_ll_dma.h>
 #include <stm32f7xx_ll_bus.h>
 #include <stm32f7xx_ll_gpio.h>
+#include <stm32f7xx_ll_usart.h>
+#include <thread>
+#include <iostream>
 
 void initBoardLed(void){
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -84,6 +87,44 @@ void initLedPwmTimer(void){
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
+void initUart(void)
+{
+    LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK2);
+
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
+
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_9;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    LL_USART_InitTypeDef USART_InitStruct = {0};
+    USART_InitStruct.BaudRate = 115200;
+    USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
+    USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
+    USART_InitStruct.Parity = LL_USART_PARITY_NONE;
+    USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
+    USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+    USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
+    LL_USART_Init(USART1, &USART_InitStruct);
+    LL_USART_ConfigAsyncMode(USART1);
+    LL_USART_Enable(USART1);
+}
+
 extern "C" void initPendSVInterrupt(){
     __HAL_RCC_PWR_CLK_ENABLE();
     __HAL_RCC_SYSCFG_CLK_ENABLE();
@@ -92,9 +133,37 @@ extern "C" void initPendSVInterrupt(){
 
 LedCircle* led = nullptr;
 
+
+void putChar(char c) {
+    while (!LL_USART_IsActiveFlag_TXE(USART1)) {}
+    LL_USART_TransmitData9(USART1, c);
+}
+
+void write(const char* str) {
+    while(*str != 0){
+        while (!LL_USART_IsActiveFlag_TXE(USART1)) {}
+        LL_USART_TransmitData9(USART1, *str);
+        ++str; 
+    }
+}
+
+
+void writeLine(const char* str) {
+    write(str);
+    write("\r\n");
+}
+
+
+
 extern"C" void mainThread(void * argument){
     initBoardLed();
     initLedPwmTimer();
+    initUart();
+
+
+    writeLine("Hello");
+    //std::cout << "cout" << std::endl;
+
 
     led = new LedCircle(TIM5);
 
@@ -118,6 +187,9 @@ extern"C" void mainThread(void * argument){
 extern "C" int main() {
     initPendSVInterrupt();
     systemClockConfig();
+
+   
+    
     if(osKernelInitialize() != osOK){
         std::abort();
     }

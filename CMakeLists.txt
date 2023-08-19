@@ -45,9 +45,15 @@ PRIVATE
     Stm32CmsisCore
 )
 
+target_compile_options(${PROJECT_NAME} 
+PRIVATE 
+    -lpthread
+)
+
 target_compile_definitions(${PROJECT_NAME} 
 PRIVATE 
     ${STM32_DEVICE}
     USE_FULL_LL_DRIVER
+    HSE_VALUE=12000000
 )
 
