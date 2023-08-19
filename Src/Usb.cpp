@@ -1,8 +1,6 @@
 #include "Usb.h"
 
 #include <LFramework/Debug.h>
-//#include <LFramework/Threading/Thread.h>
-
 
 Usb::Usb(){
 	usbInterface = new LFramework::USB::UsbDBulkInterface();
