@@ -12,6 +12,8 @@ target_sources(${PROJECT_NAME}
 		PinMap.h
 		System.h
 		LedCircle.h
+		usbd_conf.h
+		usbd_desc.h
 )
 
 #add_subdirectory(Cube)

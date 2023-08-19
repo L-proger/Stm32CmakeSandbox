@@ -21,12 +21,13 @@ FetchStm32Hal()
 FetchStm32FreeRtos()
 FetchStm32CmsisDevice()
 FetchStm32CmsisCore()
+FetchStm32UsbDevice()
 
 find_package(Stm32Hal REQUIRED)
 find_package(Stm32FreeRtos REQUIRED)
 find_package(Stm32CmsisDevice REQUIRED)
 find_package(Stm32CmsisCore REQUIRED)
-
+find_package(Stm32UsbDevice REQUIRED)
 
 
 
@@ -43,6 +44,7 @@ PRIVATE
     Stm32FreeRtos
     Stm32CmsisDevice
     Stm32CmsisCore
+    Stm32UsbDevice
 )
 
 target_compile_options(${PROJECT_NAME} 
