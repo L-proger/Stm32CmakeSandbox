@@ -184,18 +184,6 @@ extern "C" {
 LedCircle* led = nullptr;
 
 
-void putChar(char c) {
-    while (!LL_USART_IsActiveFlag_TXE(USART1)) {}
-    LL_USART_TransmitData9(USART1, c);
-}
-
-void write(const char* str) {
-    while(*str != 0){
-        while (!LL_USART_IsActiveFlag_TXE(USART1)) {}
-        LL_USART_TransmitData9(USART1, *str);
-        ++str; 
-    }
-}
 
 
 void writeLine(const char* str) {
