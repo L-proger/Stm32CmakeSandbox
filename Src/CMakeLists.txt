@@ -6,7 +6,6 @@ target_sources(${PROJECT_NAME}
 		Color.h
 		interrupts.c
 		Stm32F7.h
-		Syscalls.cpp
 		System.h
 		Rtos.cpp
 		PinMap.h
@@ -14,6 +13,8 @@ target_sources(${PROJECT_NAME}
 		LedCircle.h
 		Usb.h
 		Usb.cpp
+		LFrameworkConfig.h
+		ILI9488.h
 		#usbd_desc.h
 )
 

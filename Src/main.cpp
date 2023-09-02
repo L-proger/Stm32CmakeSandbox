@@ -3,7 +3,6 @@
 #include <stm32f7xx_hal.h>
 #include <PinMap.h>
 #include <cstdint>
-#include "cmsis_os.h"
 #include "System.h"
 #include "LedCircle.h"
 #include <stm32f7xx_ll_tim.h>
@@ -11,9 +10,13 @@
 #include <stm32f7xx_ll_bus.h>
 #include <stm32f7xx_ll_gpio.h>
 #include <stm32f7xx_ll_usart.h>
+#include <stm32f7xx_ll_spi.h>
 #include <thread>
 #include <iostream>
 #include "Usb.h"
+#include <LFramework/IO/Terminal/TerminalAnsi.h>
+#include <LFramework/Debug.h>
+#include "ILI9488.h"
 
 void initBoardLed(void){
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -27,6 +30,19 @@ void initBoardLed(void){
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+}
+
+
+void initLcdGpio() {
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
+
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = LCD_CS_Pin | LCD_DC_Pin | LCD_RST_Pin;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    LL_GPIO_Init(LCD_CS_GPIO_Port, &GPIO_InitStruct);
 }
 
 void initLedPwmTimer(void){
@@ -114,7 +130,7 @@ void initUart(void)
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     LL_USART_InitTypeDef USART_InitStruct = {0};
-    USART_InitStruct.BaudRate = 115200;
+    USART_InitStruct.BaudRate = 2000000;
     USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
     USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
     USART_InitStruct.Parity = LL_USART_PARITY_NONE;
@@ -125,6 +141,76 @@ void initUart(void)
     LL_USART_ConfigAsyncMode(USART1);
     LL_USART_Enable(USART1);
 }
+
+
+void MX_SPI3_Init(void)
+{
+
+  /* USER CODE BEGIN SPI3_Init 0 */
+
+  /* USER CODE END SPI3_Init 0 */
+
+  LL_SPI_InitTypeDef SPI_InitStruct = {0};
+
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  /* Peripheral clock enable */
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI3);
+
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOC);
+  /**SPI3 GPIO Configuration
+  PC10   ------> SPI3_SCK
+  PC11   ------> SPI3_MISO
+  PC12   ------> SPI3_MOSI
+  */
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_6;
+  LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_11;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_6;
+  LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_12;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_6;
+  LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN SPI3_Init 1 */
+
+  /* USER CODE END SPI3_Init 1 */
+  SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
+  SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
+  SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_8BIT;
+  SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
+  SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
+  SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
+  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV32;
+  SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
+  SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
+  SPI_InitStruct.CRCPoly = 7;
+  LL_SPI_Init(SPI3, &SPI_InitStruct);
+  LL_SPI_SetStandard(SPI3, LL_SPI_PROTOCOL_MOTOROLA);
+  LL_SPI_EnableNSSPulseMgt(SPI3);
+  /* USER CODE BEGIN SPI3_Init 2 */
+
+
+    LL_SPI_Enable(SPI3);
+  /* USER CODE END SPI3_Init 2 */
+
+}
+
 
 extern "C" void initPendSVInterrupt(){
     __HAL_RCC_PWR_CLK_ENABLE();
@@ -181,37 +267,40 @@ extern "C" {
 
 
 
-LedCircle* led = nullptr;
+void displayApp() {
+
+    ILI9488 ili;
 
 
+    ili.setInversionEnabled(true);
+
+    ili.fillScreen(0x3f << 12);
+
+ 
 
 
-void writeLine(const char* str) {
-    write(str);
-    write("\r\n");
+    while(true){
+        LL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+
+        ili.fillScreen(0x3f << 12);
+         ili.fillScreen(0x3f << 6);
+
+          ili.fillScreen(0x3f << 0);
+
+
+       // vTaskDelay(1000);
+    }
 }
 
 
-
-extern"C" void mainThread(void * argument){
-    initBoardLed();
-    initLedPwmTimer();
-    initUart();
-
-    writeLine("Hello");
-
-    Usb* usb = new Usb();
-    writeLine("USB Started");
-
-
-    //std::cout << "cout" << std::endl;
-
-
+LedCircle* led = nullptr;
+void ledCircleApp() {
     led = new LedCircle(TIM5);
 
     Color c1 = Color{18, 0, 21};
     Color c2 = Color::green(0x1);
     int frameId = 0;
+
     while(true){
 
         LL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
@@ -226,27 +315,43 @@ extern"C" void mainThread(void * argument){
     }
 }
 
+
+extern"C" void mainThread(void * argument){
+    initBoardLed();
+    initLedPwmTimer();
+    initUart();
+
+    initLcdGpio();
+
+    MX_SPI3_Init();
+
+
+
+    LFramework::Terminal::out << LFramework::Terminal::Ansi::Cursor::MoveHome() << LFramework::Terminal::Ansi::Viewport::ClearScreen();
+    LFramework::Debug::Log() << "Hello";
+
+    Usb* usb = new Usb();
+    LFramework::Debug::Log() << "USB Started";
+
+
+    //std::cout << "cout" << std::endl;
+    displayApp();
+
+    //ledCircleApp();
+}
+
 extern "C" int main() {
     initPendSVInterrupt();
     systemClockConfig();
 
    
-    
-    if(osKernelInitialize() != osOK){
-        std::abort();
+    TaskHandle_t mainThreadHandle;
+    if (xTaskCreate ((TaskFunction_t)mainThread, "mainThread", (configSTACK_DEPTH_TYPE)4096, 0, tskIDLE_PRIORITY + 1, &mainThreadHandle) != pdPASS) {
+        for(;;);
     }
 
-    osThreadId_t defaultTaskHandle;
-    osThreadAttr_t defaultTaskAttributes;
-    defaultTaskAttributes = {};
-    defaultTaskAttributes.name = "defaultTask",
-    defaultTaskAttributes.stack_size = 4096 * 4,
-    defaultTaskAttributes.priority = (osPriority_t) osPriorityNormal,
-    defaultTaskHandle = osThreadNew(mainThread, NULL, &defaultTaskAttributes);
+    vTaskStartScheduler();
 
-    if(osKernelStart() != osOK){
-        std::abort();
-    }
     return 0;
 }
 
