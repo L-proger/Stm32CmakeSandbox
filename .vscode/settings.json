@@ -58,7 +58,21 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "thread": "cpp",
-        "stm32f7xx.h": "c"
+        "stm32f7xx.h": "c",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "ctime": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "regex": "cpp",
+        "future": "cpp",
+        "iomanip": "cpp",
+        "mutex": "cpp",
+        "semaphore": "cpp",
+        "sstream": "cpp",
+        "stop_token": "cpp"
     },
     //"cmake.cmakePath": "C:\\PROGRAM FILES\\MICROSOFT VISUAL STUDIO\\2022\\PREVIEW\\COMMON7\\IDE\\COMMONEXTENSIONS\\MICROSOFT\\CMAKE\\CMake\\bin\\cmake.exe",
 }
